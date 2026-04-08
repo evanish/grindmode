@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GrindMode — Maximize Your Potential™</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>GrindMode 💼</h1>
+      <p class="tagline">The #1 productivity app for people who use productivity apps instead of doing work.</p>
+    </header>
+
+    <section class="score-section">
+      <h2>Today's Productivity Score</h2>
+      <div class="score-display" id="score-display">—</div>
+      <div class="score-inputs">
+        <label>Tasks completed: <input type="number" id="tasks-input" min="0" value="0" /></label>
+        <label>Hours worked: <input type="number" id="hours-input" min="0" value="0" /></label>
+        <button onclick="updateScore()">Calculate My Worth</button>
+      </div>
+    </section>
+
+    <section class="advice-section">
+      <h2>AI-Powered Wisdom™</h2>
+      <div class="advice-box" id="advice-box">Click below to receive life-changing advice.</div>
+      <button onclick="dispenseAdvice()">Enlighten Me</button>
+    </section>
+
+    <section class="timer-section">
+      <h2>Focus Timer</h2>
+      <p class="timer-subtitle">25 minutes of pure, uninterrupted distraction.</p>
+      <div class="timer-display" id="timer-display">25:00</div>
+      <div class="timer-controls">
+        <button onclick="startTimer()">Start</button>
+        <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()">Reset</button>
+      </div>
+    </section>
+
+    <section class="sync-section">
+      <h2>Cloud Sync</h2>
+      <p>Your data is safe with us. Probably.</p>
+      <button onclick="syncToCloud()">Sync Now</button>
+      <div id="sync-status"></div>
+    </section>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
