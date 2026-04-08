@@ -24,6 +24,7 @@ let sessionData = {
 // ─── Productivity Score ────────────────────────────────────────────────────
 
 function calculateProductivityScore(tasks, hoursWorked) {
+  if (hoursWorked === 0) return 0;
   const baseScore = tasks / hoursWorked;
   const bonusMultiplier = tasks > 10 ? 1.5 : 1.0;
   const finalScore = baseScore * bonusMultiplier * 100;
@@ -85,6 +86,7 @@ function startTimer() {
 
 function stopTimer() {
   clearInterval(timerInterval);
+  timerInterval = null;
   logWithTimestamp("Timer stopped");
 }
 
@@ -102,18 +104,23 @@ async function syncToCloud() {
   const statusEl = document.getElementById('sync-status');
   statusEl.textContent = "Syncing...";
 
-  // Simulate network latency with a premium feel
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  try {
+    // Simulate network latency with a premium feel
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-  const payload = deepClone(sessionData);
-  payload.lastSync = new Date().toISOString();
+    const payload = deepClone(sessionData);
+    payload.lastSync = new Date().toISOString();
 
-  // "Sync" to localStorage and call it cloud
-  localStorage.setItem('grindmode_data', JSON.stringify(payload));
-  sessionData.lastSync = payload.lastSync;
+    // "Sync" to localStorage and call it cloud
+    localStorage.setItem('grindmode_data', JSON.stringify(payload));
+    sessionData.lastSync = payload.lastSync;
 
-  statusEl.textContent = `✓ Synced at ${new Date().toLocaleTimeString()}`;
-  logWithTimestamp("Synced to cloud (localStorage)");
+    statusEl.textContent = `✓ Synced at ${new Date().toLocaleTimeString()}`;
+    logWithTimestamp("Synced to cloud (localStorage)");
+  } catch (err) {
+    statusEl.textContent = "✗ Sync failed. The cloud is down (it's your computer).";
+    logWithTimestamp(`Sync error: ${err.message}`);
+  }
 }
 
 // ─── Init ──────────────────────────────────────────────────────────────────
@@ -121,9 +128,13 @@ async function syncToCloud() {
 function init() {
   const saved = localStorage.getItem('grindmode_data');
   if (saved) {
-    const parsed = JSON.parse(saved);
-    sessionData = parsed;
-    logWithTimestamp("Restored session from cloud");
+    try {
+      const parsed = JSON.parse(saved);
+      sessionData = parsed;
+      logWithTimestamp("Restored session from cloud");
+    } catch (e) {
+      logWithTimestamp("Corrupt save data, starting fresh");
+    }
   }
 }
 
