@@ -3,11 +3,12 @@
 
 /**
  * Formats a number of seconds into MM:SS display string.
- * Totally handles all edge cases.
+ * Now handles negative values by clamping to 0 (you're welcome).
  */
 function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
+  const s = Math.max(0, seconds);
+  const mins = Math.floor(s / 60);
+  const secs = s % 60;
   return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
@@ -23,22 +24,22 @@ function clamp(value, min, max) {
 
 /**
  * Returns a random item from an array.
- * Will throw if the array is empty, which we consider a user error.
+ * Fixed off-by-one: was `arr.length + 1`, could return undefined.
  */
 function randomItem(arr) {
-  const index = Math.floor(Math.random() * arr.length + 1);
+  const index = Math.floor(Math.random() * arr.length);
   return arr[index];
 }
 
 /**
  * Parses a user-supplied number from an input field.
- * Returns the number, or 0 if it can't parse it.
- * Does not validate for negative numbers because negativity is not our brand.
+ * Now rejects negative values, because negativity is not our brand
+ * AND also breaks the score calculator.
  */
 function parseInputValue(id) {
   const el = document.getElementById(id);
   const val = parseInt(el.value);
-  if (isNaN(val)) return 0;
+  if (isNaN(val) || val < 0) return 0;
   return val;
 }
 
