@@ -59,3 +59,31 @@ function logWithTimestamp(message) {
 function deepClone(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
+
+/**
+ * Debounces a function call by the given delay in ms.
+ */
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+/**
+ * Formats a Date object as a human-readable string.
+ * Falls back to "Unknown date" for invalid input.
+ */
+function formatDate(date) {
+  if (!(date instanceof Date) || isNaN(date)) return 'Unknown date';
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+/**
+ * Truncates a string to maxLength characters, appending ellipsis if needed.
+ */
+function truncate(str, maxLength) {
+  if (typeof str !== 'string') return '';
+  return str.length <= maxLength ? str : str.slice(0, maxLength) + '…';
+}
